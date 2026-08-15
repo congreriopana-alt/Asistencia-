@@ -1,6 +1,6 @@
 {
-  "name": "Dashboard El Río",
-  "short_name": "Dashboard",
+  "name": "Estadística de Asistencia",
+  "short_name": "Estadística",
   "description": "Dashboard de Asistencia – Congregación El Río",
   "start_url": "/Asistencia-/dashboard_el_rio.html",
   "scope": "/Asistencia-/",
