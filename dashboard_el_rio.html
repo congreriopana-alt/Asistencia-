@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Asistencia – Congregación El Río</title>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Asistencia">
+<meta name="theme-color" content="#0a2540">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --azul:#0a2540;--rio:#1a5f8a;--claro:#2e8bc0;
+  --bl:#fff;--txt:#0d1b2a;--gris:#607080;
+  --verde:#1a7a5e;--oro:#c8922a;--borde:#dde6ef;--fondo:#f4f8fc;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"DM Sans",sans-serif;
+  background:var(--azul);min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  padding:28px 14px 80px;
+  position:relative;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 20% 80%,rgba(26,95,138,.4) 0%,transparent 70%),
+    radial-gradient(ellipse 60% 80% at 80% 20%,rgba(46,139,192,.2) 0%,transparent 70%),
+    linear-gradient(180deg,#0a2540 0%,#0d3055 60%,#0a2540 100%);
+  pointer-events:none;z-index:0;
+}
+.wrap{position:relative;z-index:1;width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;}
+
+/* HEADER */
+header{text-align:center;color:#fff;margin-bottom:24px;animation:bajar .7s cubic-bezier(.22,1,.36,1) both}
+header h1{font-family:"Cormorant Garamond",serif;font-size:1.75rem;font-weight:700;line-height:1.15}
+header p{font-size:.72rem;opacity:.5;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase}
+.est-badge{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;font-size:.72rem;color:rgba(255,255,255,.8)}
+.dot{width:7px;height:7px;border-radius:50%;background:#6ee7b7;flex-shrink:0}
+.dot.carg{background:#fcd34d;animation:pulso 1.2s infinite}.dot.err{background:#f87171}
+@keyframes pulso{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+@keyframes bajar{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes subir{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARD */
+.card{background:var(--bl);border-radius:24px;padding:26px 20px 20px;width:100%;
+  box-shadow:0 24px 64px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.15);
+  animation:subir .7s cubic-bezier(.22,1,.36,1) .1s both;margin-bottom:16px;}
+
+/* SECCIÓN */
+.sec{font-family:"Cormorant Garamond",serif;font-size:.88rem;font-weight:600;
+  color:var(--rio);text-transform:uppercase;letter-spacing:1.2px;
+  border-bottom:1px solid var(--borde);padding-bottom:7px;margin-bottom:14px;margin-top:20px;}
+.sec:first-child{margin-top:0}
+
+/* ÚLTIMA REUNIÓN */
+.ultima{background:linear-gradient(90deg,var(--azul),var(--rio));border-radius:14px;
+  padding:15px 18px;color:#fff;display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 8px 24px rgba(10,37,64,.25);}
+.u-lbl{font-size:.65rem;text-transform:uppercase;letter-spacing:1px;opacity:.6;margin-bottom:2px}
+.u-fecha{font-family:"Cormorant Garamond",serif;font-size:1.05rem;font-weight:700;margin-bottom:7px}
+.u-chip{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);
+  border-radius:20px;padding:2px 10px;font-size:.72rem;margin-right:4px;margin-bottom:2px}
+.u-num{font-family:"Cormorant Garamond",serif;font-size:3rem;font-weight:700;line-height:1}
+.u-sub{font-size:.62rem;opacity:.6;text-transform:uppercase;text-align:right}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{border-radius:14px;padding:13px 11px;text-align:center;border:1.5px solid #c8dff0;
+  background:linear-gradient(145deg,#f0f7ff,#e4f0fa)}
+.kpi.v{background:linear-gradient(145deg,#edfaf4,#d6f5e8);border-color:#a8e0c8}
+.kpi.o{background:linear-gradient(145deg,#fefce8,#fef3c7);border-color:#fde68a}
+.kpi.r{background:linear-gradient(145deg,#fff1f1,#ffe4e4);border-color:#fca5a5}
+.kpi-l{font-size:.6rem;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--gris);margin-bottom:4px}
+.kpi-v{font-family:"Cormorant Garamond",serif;font-size:2.1rem;font-weight:700;line-height:1;color:var(--txt)}
+.kpi-s{font-size:.6rem;color:var(--gris);margin-top:2px}
+
+/* ESTADO */
+.est-row{display:flex;align-items:center;justify-content:center;gap:7px;margin:12px 0 4px;font-size:.72rem;color:var(--gris)}
+
+/* BOTONES */
+.btn-act{width:100%;padding:13px;border-radius:12px;border:none;
+  background:var(--rio);color:#fff;font-family:"DM Sans",sans-serif;
+  font-size:.88rem;font-weight:600;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:filter .15s,transform .1s;margin-bottom:10px;}
+.btn-act:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-act:active{transform:translateY(0)}
+.btn-act svg{transition:transform .5s}
+.btn-act.spin svg{transform:rotate(360deg)}
+
+.btn-duo{display:flex;gap:10px}
+.btn-hist{flex:1;padding:12px;border-radius:12px;background:var(--fondo);color:var(--txt);
+  border:1.5px solid var(--borde);font-family:"DM Sans",sans-serif;font-size:.84rem;
+  font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:all .2s}
+.btn-hist:hover{background:#e8eef5}
+.btn-hist.active{border-color:var(--rio);color:var(--rio)}
+.btn-est{flex:1;padding:12px;border-radius:12px;background:linear-gradient(90deg,#4a2c8a,#7c3aed);
+  color:#fff;border:none;font-family:"DM Sans",sans-serif;font-size:.84rem;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:filter .15s}
+.btn-est:hover{filter:brightness(1.1)}
+
+/* PANELES */
+.panels{margin-top:18px}
+.panel{display:none}.panel.show{display:block}
+
+/* BARRAS */
+.bw{margin-bottom:10px}
+.bl2{display:flex;justify-content:space-between;font-size:.74rem;color:var(--gris);margin-bottom:4px;font-weight:500}
+.bl2 span:last-child{font-weight:700;color:var(--txt)}
+.bt{height:9px;background:#f0f4f8;border-radius:30px;overflow:hidden;border:1px solid var(--borde)}
+.bf{height:100%;border-radius:30px;transition:width 1s cubic-bezier(.22,1,.36,1)}
+
+/* RANKING */
+.ri{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--borde)}
+.ri:last-child{border-bottom:none}
+.rn{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:700;flex-shrink:0}
+.r1{background:#fbbf24;color:#1a2030}.r2{background:#94a3b8;color:#1a2030}
+.r3{background:#cd7c3e;color:#fff}.r4{background:#f0f4f8;color:var(--gris);border:1px solid var(--borde)}
+.ri-info{flex:1}
+.ri-fecha{font-size:.78rem;font-weight:600}
+.ri-det{font-size:.68rem;color:var(--gris);margin-top:1px}
+.ri-tot{font-family:"Cormorant Garamond",serif;font-size:1.4rem;font-weight:700;color:var(--rio)}
+
+/* MES */
+.mes-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.mes-it{background:#f8fafc;border:1px solid var(--borde);border-radius:10px;padding:10px 11px;text-align:center}
+.mes-nom{font-size:.62rem;color:var(--gris);text-transform:uppercase;letter-spacing:.7px;margin-bottom:2px}
+.mes-val{font-family:"Cormorant Garamond",serif;font-size:1.4rem;font-weight:700;color:var(--rio)}
+.mes-sub{font-size:.6rem;color:var(--gris);margin-top:1px}
+
+/* HISTORIAL */
+.hist-it{background:#f8fafc;border:1.5px solid var(--borde);border-radius:12px;padding:11px 13px;margin-bottom:8px}
+.hist-fecha{font-size:.74rem;color:var(--gris);margin-bottom:4px;font-weight:600}
+.hist-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:3px}
+.chip{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.73rem;font-weight:600}
+.chip.p{background:#dbeafe;color:#1e40af}
+.chip.z{background:#dcfce7;color:#166534}
+.chip.t{background:#fef3c7;color:#92610a}
+.hist-nota{font-size:.68rem;color:var(--gris);font-style:italic;margin-top:2px}
+
+/* CFG */
+.sep{height:1px;background:var(--borde);margin:16px 0}
+.cfg-link{background:none;border:none;color:var(--gris);font-size:.72rem;cursor:pointer;
+  text-decoration:underline;font-family:"DM Sans",sans-serif;display:block;margin:0 auto}
+.cfg-box{background:#fffdf5;border:1.5px solid #fde8a0;border-radius:12px;padding:14px 15px;margin-top:10px;display:none}
+.cfg-box.show{display:block}
+.cfg-box label{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:#92610a;display:block;margin-bottom:5px}
+.cfg-box input{width:100%;padding:9px 11px;border:1.5px solid #fcd34d;border-radius:8px;
+  font-family:"DM Sans",sans-serif;font-size:.8rem;outline:none;background:#fffbeb;margin-bottom:8px}
+.cfg-box button{padding:8px 16px;background:#f59e0b;color:#fff;border:none;border-radius:8px;
+  font-weight:600;cursor:pointer;font-family:"DM Sans",sans-serif;font-size:.8rem}
+.cfg-nota{font-size:.7rem;color:#705210;margin-top:9px;line-height:1.55;background:#fef3c7;padding:9px 10px;border-radius:7px}
+
+.vacio{text-align:center;padding:24px;color:var(--gris);font-size:.82rem}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);
+  padding:10px 20px;border-radius:30px;font-size:.8rem;font-weight:600;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);z-index:999;white-space:nowrap;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.ok{background:#1a7a5e;color:#fff}.toast.warn{background:#c0392b;color:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Congregación El Río<br>Panajachel</h1>
+    <p>Dashboard de Asistencia</p>
+    <div class="est-badge">
+      <div class="dot carg" id="dot"></div>
+      <span id="stTxt">Cargando...</span>
+    </div>
+  </header>
+
+  <div class="card">
+
+    <p class="sec">Última Reunión</p>
+    <div class="ultima">
+      <div>
+        <div class="u-lbl">Fecha</div>
+        <div class="u-fecha" id="uF">—</div>
+        <div id="uC"></div>
+      </div>
+      <div>
+        <div class="u-num" id="uT">—</div>
+        <div class="u-sub">Total</div>
+      </div>
+    </div>
+
+    <p class="sec">Resumen General</p>
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-l">Reuniones</div><div class="kpi-v" id="kR">—</div><div class="kpi-s">registradas</div></div>
+      <div class="kpi v"><div class="kpi-l">Promedio</div><div class="kpi-v" id="kP">—</div><div class="kpi-s">por reunión</div></div>
+      <div class="kpi o"><div class="kpi-l">Máxima</div><div class="kpi-v" id="kX">—</div><div class="kpi-s">mayor asist.</div></div>
+      <div class="kpi r"><div class="kpi-l">Mínima</div><div class="kpi-v" id="kN">—</div><div class="kpi-s">menor asist.</div></div>
+    </div>
+
+    <div class="est-row">
+      <div class="dot carg" id="dot2"></div>
+      <span id="stTxt2">Cargando datos...</span>
+      <span id="ts"></span>
+    </div>
+
+    <button class="btn-act" id="btnR" onclick="cargar(true)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+      </svg>
+      Actualizar
+    </button>
+
+    <div class="btn-duo">
+      <button class="btn-hist" id="btnH" onclick="togglePanel('hist')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        Historial
+      </button>
+      <button class="btn-est" id="btnE" onclick="togglePanel('est')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Estadísticas
+      </button>
+    </div>
+
+    <div class="panels">
+      <!-- HISTORIAL -->
+      <div class="panel" id="panel-hist">
+        <p class="sec" style="margin-top:16px">Historial completo</p>
+        <div id="gHist"></div>
+      </div>
+
+      <!-- ESTADÍSTICAS -->
+      <div class="panel" id="panel-est">
+        <p class="sec" style="margin-top:16px">Presencial vs Zoom</p>
+        <div id="gModo"></div>
+
+        <p class="sec">Tendencia</p>
+        <div id="gTend" style="width:100%;overflow:hidden"></div>
+
+        <p class="sec">Promedio por día</p>
+        <div id="gDia"></div>
+
+        <p class="sec">Top reuniones</p>
+        <div id="gRank"></div>
+
+        <p class="sec">Por mes</p>
+        <div class="mes-grid" id="gMes"></div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <button class="cfg-link" onclick="toggleCfg()">Configurar conexión a Google Sheets</button>
+    <div class="cfg-box" id="cfgBox">
+      <label>ID de tu Google Sheets</label>
+      <input id="sheetId" type="text" placeholder="1jVY2mGJrRur4quMikKiZelqOaO1Pqo1m47bHDNAJncI"/>
+      <label>GID de la pestaña</label>
+      <input id="sheetGid" type="text" placeholder="0"/>
+      <button onclick="guardarCfg()">Guardar</button>
+      <div class="cfg-nota">
+        Para que funcione: <strong>Archivo → Compartir → Publicar en la web → pestaña → CSV → Publicar</strong><br><br>
+        El ID está en la URL de tu hoja entre <code>/d/</code> y <code>/edit</code>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── Config ────────────────────────────────────
+// ID de la hoja actual con datos históricos
+let SHEET_ID  = localStorage.getItem('elrio_sid') || '1jVY2mGJrRur4quMikKiZelqOaO1Pqo1m47bHDNAJncI';
+let SHEET_GID = localStorage.getItem('elrio_gid') || '0';
+let ultimoHash = '';
+
+// ── Datos precargados desde Excel (se actualizan cuando conecte Sheets) ──
+const DATOS_HISTORICOS = [
+  {fecha:"2026-04-16",presencial:74,zoom:30,total:104,notas:""},
+  {fecha:"2026-04-18",presencial:73,zoom:19,total:92,notas:""},
+  {fecha:"2026-04-23",presencial:70,zoom:33,total:103,notas:""},
+  {fecha:"2026-04-25",presencial:77,zoom:31,total:108,notas:""},
+  {fecha:"2026-04-30",presencial:71,zoom:26,total:97,notas:""},
+  {fecha:"2026-05-02",presencial:65,zoom:33,total:98,notas:""},
+  {fecha:"2026-05-14",presencial:73,zoom:28,total:101,notas:""},
+  {fecha:"2026-05-16",presencial:69,zoom:23,total:92,notas:""},
+  {fecha:"2026-05-21",presencial:64,zoom:40,total:104,notas:""},
+  {fecha:"2026-05-23",presencial:56,zoom:41,total:97,notas:""},
+  {fecha:"2026-05-28",presencial:76,zoom:27,total:103,notas:""},
+  {fecha:"2026-05-30",presencial:46,zoom:29,total:75,notas:""},
+  {fecha:"2026-06-06",presencial:71,zoom:28,total:99,notas:""},
+  {fecha:"2026-06-11",presencial:62,zoom:38,total:100,notas:""},
+  {fecha:"2026-06-13",presencial:69,zoom:32,total:101,notas:""},
+  {fecha:"2026-06-18",presencial:73,zoom:36,total:109,notas:""},
+  {fecha:"2026-06-25",presencial:95,zoom:18,total:113,notas:""},
+  {fecha:"2026-06-27",presencial:67,zoom:22,total:89,notas:""},
+  {fecha:"2026-07-11",presencial:68,zoom:25,total:93,notas:""},
+  {fecha:"2026-07-14",presencial:91,zoom:22,total:113,notas:""},
+  {fecha:"2026-07-18",presencial:115,zoom:18,total:133,notas:""},
+  {fecha:"2026-08-01",presencial:67,zoom:30,total:97,notas:""},
+  {fecha:"2026-08-06",presencial:70,zoom:32,total:102,notas:""},
+  {fecha:"2026-08-08",presencial:71,zoom:31,total:102,notas:""},
+  {fecha:"2026-08-13",presencial:71,zoom:32,total:103,notas:""}
+];
+let panelActivo = null;
+
+// ─── Init ──────────────────────────────────────
+window.onload = () => {
+  document.getElementById('sheetId').value  = SHEET_ID;
+  document.getElementById('sheetGid').value = SHEET_GID;
+  cargar(false);
+  // Polling cada 30s — solo actualiza si detecta dato nuevo
+  setInterval(async () => {
+    try {
+      const data = await obtenerDatos();
+      if (!data || !data.length) return;
+      const hash = data.map(r => r.fecha + r.total).join('|');
+      if (hash !== ultimoHash) {
+        ultimoHash = hash;
+        render(data);
+        const h = new Date().toLocaleTimeString('es-GT',{hour:'2-digit',minute:'2-digit'});
+        document.getElementById('ts').textContent = ' · ' + h;
+        setDot('ok', 'Nuevo dato detectado');
+        showToast('Nuevo registro detectado', 'ok');
+      }
+    } catch(e) {}
+  }, 30000);
+};
+
+// ─── Panel toggle ──────────────────────────────
+function togglePanel(id) {
+  const panel = document.getElementById('panel-' + id);
+  const bH = document.getElementById('btnH');
+  const bE = document.getElementById('btnE');
+  if (panelActivo === id) {
+    panel.classList.remove('show');
+    bH.classList.remove('active'); bE.classList.remove('active');
+    panelActivo = null;
+  } else {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('show'));
+    bH.classList.remove('active'); bE.classList.remove('active');
+    panel.classList.add('show');
+    if (id === 'hist') bH.classList.add('active');
+    else bE.classList.add('active');
+    panelActivo = id;
+  }
+}
+
+let cfgOpen = false;
+function toggleCfg() {
+  cfgOpen = !cfgOpen;
+  document.getElementById('cfgBox').classList.toggle('show', cfgOpen);
+}
+function guardarCfg() {
+  SHEET_ID  = document.getElementById('sheetId').value.trim();
+  SHEET_GID = document.getElementById('sheetGid').value.trim() || '0';
+  localStorage.setItem('elrio_sid', SHEET_ID);
+  localStorage.setItem('elrio_gid', SHEET_GID);
+  cfgOpen = false;
+  document.getElementById('cfgBox').classList.remove('show');
+  cargar(true);
+}
+
+// ─── Cargar datos ──────────────────────────────
+async function cargar(sp) {
+  const btn = document.getElementById('btnR');
+  if (sp) btn.classList.add('spin');
+  setDot('carg', 'Cargando...');
+  try {
+    const data = await obtenerDatos();
+    if (!data || !data.length) {
+      setDot('err', 'Sin datos — publica la hoja como CSV');
+      document.getElementById('ts').textContent = '';
+      if (sp) setTimeout(() => btn.classList.remove('spin'), 600);
+      return;
+    }
+    ultimoHash = data.map(r => r.fecha + r.total).join('|');
+    render(data);
+    setDot('ok', 'Conectado a Google Sheets');
+    const h = new Date().toLocaleTimeString('es-GT',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('ts').textContent = ' · ' + h;
+    if (sp) showToast('Datos actualizados', 'ok');
+  } catch(e) {
+    setDot('err', 'Error — verifica la configuración');
+    if (sp) showToast('No se pudo conectar', 'warn');
+  }
+  if (sp) setTimeout(() => btn.classList.remove('spin'), 600);
+}
+
+// ─── Leer CSV de Google Sheets ─────────────────
+async function obtenerDatos() {
+  const url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/export?format=csv&gid=' + SHEET_GID;
+  const res  = await fetch(url);
+  const txt  = await res.text();
+  const rows = txt.trim().split('\n');
+  const out  = [];
+  const seen = new Set(); // deduplicar por fecha+total
+  for (let i = 1; i < rows.length; i++) {
+    const cols = rows[i].split(',');
+    const lim  = v => String(v || '').replace(/^"|"$/g, '').trim();
+    let fecha  = lim(cols[0]);
+    if (!fecha) continue;
+
+    // Convertir número de serie Excel a fecha
+    if (!isNaN(fecha) && Number(fecha) > 40000) {
+      const excelDate = Number(fecha);
+      const d = new Date((excelDate - 25569) * 86400000);
+      const y = d.getUTCFullYear();
+      const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(d.getUTCDate()).padStart(2, '0');
+      fecha = y + '-' + m + '-' + day;
+    } else if (fecha.includes('/')) {
+      const p = fecha.split('/');
+      if (p.length === 3) {
+        fecha = p[2].length === 4
+          ? p[2] + '-' + p[1].padStart(2,'0') + '-' + p[0].padStart(2,'0')
+          : p[0] + '-' + p[1].padStart(2,'0') + '-' + p[2].padStart(2,'0');
+      }
+    }
+
+    const tot = parseInt(lim(cols[3])) || 0;
+    if (!fecha || tot === 0) continue;
+
+    // Deduplicar: misma fecha y mismo total
+    const key = fecha + '_' + tot;
+    if (seen.has(key)) continue;
+    seen.add(key);
+
+    out.push({
+      fecha,
+      presencial: parseInt(lim(cols[1])) || 0,
+      zoom:       parseInt(lim(cols[2])) || 0,
+      total:      tot,
+      notas:      lim(cols[4]) || ''
+    });
+  }
+  return out;
+}
+
+// ─── Helpers fecha ─────────────────────────────
+const DIAS  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const MESC  = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+function pF(s) { const[y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+function fF(s) {
+  const[y,m,d]=s.split('-').map(Number);
+  const f=new Date(y,m-1,d);
+  return DIAS[f.getDay()] + ', ' + d + ' de ' + MESES[m-1] + ' ' + y;
+}
+function fCorta(s) {
+  const[y,m,d]=s.split('-').map(Number);
+  return d + ' ' + MESC[m-1];
+}
+
+// ─── Render ────────────────────────────────────
+function render(data) {
+  data.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
+  const r0 = data[0];
+
+  // Última reunión
+  document.getElementById('uF').textContent = fF(r0.fecha);
+  document.getElementById('uT').textContent = r0.total;
+  document.getElementById('uC').innerHTML =
+    '<span class="u-chip">Presencial: ' + r0.presencial + '</span>' +
+    '<span class="u-chip">Zoom: ' + r0.zoom + '</span>' +
+    (r0.notas ? '<span class="u-chip">' + r0.notas + '</span>' : '');
+
+  // KPIs
+  const tots = data.map(r => r.total);
+  document.getElementById('kR').textContent = data.length;
+  document.getElementById('kP').textContent = Math.round(tots.reduce((a,b)=>a+b,0)/tots.length);
+  document.getElementById('kX').textContent = Math.max(...tots);
+  document.getElementById('kN').textContent = Math.min(...tots);
+
+  renderModo(data);
+  renderTend(data);
+  renderDia(data);
+  renderRank(data);
+  renderMes(data);
+  renderHist(data);
+}
+
+function barra(e, v, p, c) {
+  return '<div class="bw"><div class="bl2"><span>' + e + '</span><span>' + v + '</span></div>' +
+    '<div class="bt"><div class="bf" style="width:' + p + '%;background:' + c + '"></div></div></div>';
+}
+
+function renderModo(d) {
+  const tP=d.reduce((a,r)=>a+r.presencial,0), tZ=d.reduce((a,r)=>a+r.zoom,0), gT=tP+tZ||1;
+  const pP=Math.round(tP/gT*100), pZ=100-pP;
+  document.getElementById('gModo').innerHTML =
+    barra('Presencial', tP + ' personas (' + pP + '%)', pP, '#2e8bc0') +
+    barra('Zoom', tZ + ' personas (' + pZ + '%)', Math.max(pZ,1), '#1a7a5e') +
+    '<p style="font-size:.68rem;color:var(--gris);margin-top:8px;text-align:center">' +
+    d.length + ' reuniones · ' + (tP+tZ) + ' personas acumuladas</p>';
+}
+
+function renderTend(d) {
+  const ult = [...d].reverse().slice(-12);
+  if (ult.length < 2) { document.getElementById('gTend').innerHTML='<div class="vacio">Mínimo 2 registros</div>'; return; }
+  const maxT=Math.max(...ult.map(r=>r.total),1), minT=Math.min(...ult.map(r=>r.total));
+  const W=420, H=110, pX=26, pY=22, xS=(W-pX*2)/(ult.length-1);
+  const pts = ult.map((r,i) => ({x:pX+i*xS, y:H-pY-((r.total-minT)/(maxT-minT||1))*(H-pY*2), r}));
+  const poly = pts.map(p=>p.x+','+p.y).join(' ');
+  const area = 'M'+pts[0].x+','+(H-pY)+' '+pts.map(p=>'L'+p.x+','+p.y).join(' ')+' L'+pts[pts.length-1].x+','+(H-pY)+' Z';
+  document.getElementById('gTend').innerHTML =
+    '<svg viewBox="0 0 '+W+' '+H+'" width="100%" style="overflow:visible">' +
+    '<defs><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0%" stop-color="#2e8bc0" stop-opacity=".2"/>' +
+    '<stop offset="100%" stop-color="#2e8bc0" stop-opacity="0"/></linearGradient></defs>' +
+    '<path d="'+area+'" fill="url(#gr)"/>' +
+    '<polyline points="'+poly+'" fill="none" stroke="#2e8bc0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+    pts.map(p =>
+      '<circle cx="'+p.x+'" cy="'+p.y+'" r="4" fill="#fff" stroke="#2e8bc0" stroke-width="2"/>' +
+      '<text x="'+p.x+'" y="'+(H-4)+'" text-anchor="middle" font-size="9" fill="#607080">'+fCorta(p.r.fecha)+'</text>' +
+      '<text x="'+p.x+'" y="'+(p.y-8)+'" text-anchor="middle" font-size="10" font-weight="700" fill="#0a2540">'+p.r.total+'</text>'
+    ).join('') + '</svg>';
+}
+
+function renderDia(d) {
+  const pD = Array(7).fill(null).map(()=>[]);
+  d.forEach(r => pD[pF(r.fecha).getDay()].push(r.total));
+  const cols = ['#f59e0b','#3b82f6','#10b981','#8b5cf6','#ef4444','#f97316','#06b6d4'];
+  const proms = pD.map(a => a.length ? Math.round(a.reduce((x,y)=>x+y,0)/a.length) : 0);
+  const maxD = Math.max(...proms, 1);
+  const items = DIAS.map((n,i)=>({n,p:proms[i],c:cols[i],cnt:pD[i].length}))
+    .filter(x=>x.cnt>0).sort((a,b)=>b.p-a.p);
+  document.getElementById('gDia').innerHTML = items.length
+    ? items.map(x => barra(x.n+' ('+x.cnt+')', x.p, Math.round(x.p/maxD*100), x.c)).join('')
+    : '<div class="vacio">Sin datos</div>';
+}
+
+function renderRank(d) {
+  const top = [...d].sort((a,b)=>b.total-a.total).slice(0,5);
+  const cls = ['r1','r2','r3','r4','r4'];
+  document.getElementById('gRank').innerHTML = top.map((r,i) =>
+    '<div class="ri"><div class="rn '+cls[i]+'">'+(i+1)+'</div>' +
+    '<div class="ri-info"><div class="ri-fecha">'+fF(r.fecha)+'</div>' +
+    '<div class="ri-det">'+r.presencial+' presencial · '+r.zoom+' Zoom</div></div>' +
+    '<div class="ri-tot">'+r.total+'</div></div>'
+  ).join('');
+}
+
+function renderMes(d) {
+  const pm = {};
+  d.forEach(r => {
+    const[y,m] = r.fecha.split('-');
+    const k = y+'-'+m;
+    if (!pm[k]) pm[k] = {lbl:MESC[parseInt(m)-1]+' '+y, total:0, cnt:0};
+    pm[k].total += r.total; pm[k].cnt++;
+  });
+  const meses = Object.keys(pm).sort().reverse().slice(0,6);
+  document.getElementById('gMes').innerHTML = meses.map(k =>
+    '<div class="mes-it"><div class="mes-nom">'+pm[k].lbl+'</div>' +
+    '<div class="mes-val">'+pm[k].total+'</div>' +
+    '<div class="mes-sub">'+pm[k].cnt+' reun · prom '+Math.round(pm[k].total/pm[k].cnt)+'</div></div>'
+  ).join('');
+}
+
+function renderHist(d) {
+  document.getElementById('gHist').innerHTML = d.map(r =>
+    '<div class="hist-it">' +
+    '<div class="hist-fecha">'+fF(r.fecha)+'</div>' +
+    '<div class="hist-chips">' +
+    '<span class="chip p">Presencial: '+r.presencial+'</span>' +
+    '<span class="chip z">Zoom: '+r.zoom+'</span>' +
+    '<span class="chip t">Total: '+r.total+'</span>' +
+    '</div>' +
+    (r.notas ? '<div class="hist-nota">'+r.notas+'</div>' : '') +
+    '</div>'
+  ).join('');
+}
+
+// ─── Helpers ───────────────────────────────────
+function setDot(t, txt) {
+  const cls = t==='ok' ? '' : t==='carg' ? ' carg' : ' err';
+  document.getElementById('dot').className  = 'dot' + cls;
+  document.getElementById('dot2').className = 'dot' + cls;
+  document.getElementById('stTxt').textContent  = txt;
+  document.getElementById('stTxt2').textContent = txt;
+}
+function showToast(msg, tipo) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + tipo + ' show';
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .catch(e => console.warn('SW:', e));
+  });
+}
+</script>
+</body>
+</html>
