@@ -312,6 +312,12 @@ let panelActivo = null;
 window.onload = () => {
   document.getElementById('sheetId').value  = SHEET_ID;
   document.getElementById('sheetGid').value = SHEET_GID;
+  // Mostrar datos históricos inmediatamente
+  if (typeof DATOS_HISTORICOS !== 'undefined') {
+    render(JSON.parse(JSON.stringify(DATOS_HISTORICOS)));
+    setDot('ok', 'Datos cargados');
+    document.getElementById('ts').textContent = '· Actualizando...';
+  }
   cargar(false);
   // Polling cada 30s — solo actualiza si detecta dato nuevo
   setInterval(async () => {
@@ -393,7 +399,7 @@ async function cargar(sp) {
 
 // ─── Leer CSV de Google Sheets ─────────────────
 async function obtenerDatos() {
-  const url = 'https://docs.google.com/spreadsheets/d/2PACX-1vQIF0jsh9eQ9RLZ7OU4B6dspgXKxMcPEH7lYMs7KW7ctWgE-NrsaRluXbWfCbtM4aAEfFBNFZXOV6fH/pub?gid=1383950827&single=true&output=csv';
+  const url = 'https://docs.google.com/spreadsheets/d/1F0bxUd1-il76eRQNVGKbfE6e98DWFl-Q2u0MWOnkSdk/export?format=csv&gid=1383950827';
   const res  = await fetch(url);
   const txt  = await res.text();
   const rows = txt.trim().split('\n');
