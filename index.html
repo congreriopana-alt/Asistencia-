@@ -5,8 +5,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Asistencia">
-<meta name="application-name" content="Asistencia">
+<meta name="apple-mobile-web-app-title" content="Asistencia el Rio">
+<meta name="application-name" content="Asistencia el Rio">
 <meta name="theme-color" content="#0a2540">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" sizes="512x512" href="icon.png">
@@ -745,7 +745,7 @@
       </div>
       <div class="campo">
         <label>Nombre de la hoja (opcional)</label>
-        <input type="text" id="sheetsNombre" value="Asistencia" oninput="guardarConfig()">
+        <input type="text" id="sheetsNombre" value="Asistencia el Rio" oninput="guardarConfig()">
       </div>
       <div class="config-nota">
         <strong>Como configurar:</strong><br>
@@ -814,7 +814,7 @@ document.getElementById('fecha').value = hoy.toISOString().split('T')[0];
 
 function guardarConfig() {
   localStorage.setItem('elrio_sheets_url', document.getElementById('sheetsUrl').value.trim());
-  localStorage.setItem('elrio_sheets_nombre', document.getElementById('sheetsNombre').value.trim() || 'Asistencia');
+  localStorage.setItem('elrio_sheets_nombre', document.getElementById('sheetsNombre').value.trim() || 'Asistencia el Rio');
 }
 
 let configVisible = false;
@@ -926,7 +926,8 @@ function actualizarPreview() {
 async function enviarWhatsApp() {
   // 1. Abrir WhatsApp
   const msg = encodeURIComponent(generarMensaje());
-  const url = `https://chat.whatsapp.com/Kq1Sknig8YXLxvwm5SINCA?text=${msg}`;
+  // WhatsApp: abrir con mensaje listo (el grupo no acepta ?text= en enlaces de invitación)
+  const url = `https://wa.me/?text=${msg}`;
   window.open(url, '_blank');
 
   // 2. Guardar en Sheets automáticamente
@@ -941,7 +942,7 @@ async function enviarWhatsApp() {
 
   const reg = crearRegistro();
   try {
-    const hoja = document.getElementById('sheetsNombre').value.trim() || 'Asistencia';
+    const hoja = document.getElementById('sheetsNombre').value.trim() || 'Asistencia el Rio';
     const params = new URLSearchParams({
       fecha:      reg.fecha,
       presencial: reg.presencial,
@@ -1018,7 +1019,7 @@ async function guardarEnSheets() {
   const reg = crearRegistro();
 
   try {
-    const hoja = document.getElementById('sheetsNombre').value.trim() || 'Asistencia';
+    const hoja = document.getElementById('sheetsNombre').value.trim() || 'Asistencia el Rio';
     const params = new URLSearchParams({
       fecha:      reg.fecha,
       presencial: reg.presencial,
@@ -1080,7 +1081,7 @@ async function sincronizarRegistro(id) {
 
   toast('Enviando a Sheets...', 'info');
   try {
-    const hoja = document.getElementById('sheetsNombre').value.trim() || 'Asistencia';
+    const hoja = document.getElementById('sheetsNombre').value.trim() || 'Asistencia el Rio';
     const params = new URLSearchParams({
       fecha: reg.fecha, presencial: reg.presencial,
       zoom: reg.zoom, total: reg.total, notas: reg.notas || '', hoja
