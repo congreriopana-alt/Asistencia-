@@ -951,7 +951,7 @@ async function enviarWhatsApp() {
       notas:      reg.notas,
       hoja:       'Asistencia el Rio'
     });
-    await fetch(`${sheetsUrl}?${params.toString()}`, { method: 'GET', mode: 'no-cors' });
+    await fetch(`${sheetsUrl}?${params.toString()}`, { method: 'GET' });
     reg.synced = true;
     toast('Enviado a WhatsApp y guardado en Sheets', 'ok');
   } catch(e) {
@@ -1029,7 +1029,7 @@ async function guardarEnSheets() {
       hoja:       'Asistencia el Rio'
     });
 
-    const res = await fetch(`${url}?${params.toString()}`, { method: 'GET', mode: 'no-cors' });
+    const res = await fetch(`${url}?${params.toString()}`, { method: 'GET' });
 
     // Con no-cors no podemos leer la respuesta, pero si no hubo error la petición fue enviada
     reg.synced = true;
@@ -1086,7 +1086,7 @@ async function sincronizarRegistro(id) {
       fecha: reg.fecha, presencial: reg.presencial,
       zoom: reg.zoom, total: reg.total, notas: reg.notas || '', hoja
     });
-    await fetch(`${url}?${params.toString()}`, { method: 'GET', mode: 'no-cors' });
+    await fetch(`${url}?${params.toString()}`, { method: 'GET' });
     reg.synced = true;
     localStorage.setItem('elrio_asistencia', JSON.stringify(hist));
     toast('Sincronizado con Sheets', 'ok');
