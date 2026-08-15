@@ -274,8 +274,8 @@ header p{font-size:.72rem;opacity:.5;margin-top:4px;letter-spacing:1.5px;text-tr
 <script>
 // ─── Config ────────────────────────────────────
 // ID de la hoja actual con datos históricos
-let SHEET_ID  = localStorage.getItem('elrio_sid') || '1jVY2mGJrRur4quMikKiZelqOaO1Pqo1m47bHDNAJncI';
-let SHEET_GID = localStorage.getItem('elrio_gid') || '0';
+let SHEET_ID  = localStorage.getItem('elrio_sid') || '1F0bxUd1-il76eRQNVGKbfE6e98DWFl-Q2u0MWOnkSdk';
+let SHEET_GID = localStorage.getItem('elrio_gid') || '1383950827';
 let ultimoHash = '';
 
 // ── Datos precargados desde Excel (se actualizan cuando conecte Sheets) ──
@@ -393,7 +393,7 @@ async function cargar(sp) {
 
 // ─── Leer CSV de Google Sheets ─────────────────
 async function obtenerDatos() {
-  const url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/export?format=csv&gid=' + SHEET_GID;
+  const url = 'https://docs.google.com/spreadsheets/d/2PACX-1vQIF0jsh9eQ9RLZ7OU4B6dspgXKxMcPEH7lYMs7KW7ctWgE-NrsaRluXbWfCbtM4aAEfFBNFZXOV6fH/pub?gid=1383950827&single=true&output=csv';
   const res  = await fetch(url);
   const txt  = await res.text();
   const rows = txt.trim().split('\n');
