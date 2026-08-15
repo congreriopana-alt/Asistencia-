@@ -1,0 +1,25 @@
+{
+  "name": "Dashboard El Río",
+  "short_name": "Dashboard",
+  "description": "Dashboard de Asistencia – Congregación El Río",
+  "start_url": "/Asistencia-/dashboard_el_rio.html",
+  "scope": "/Asistencia-/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#4a2c8a",
+  "theme_color": "#4a2c8a",
+  "icons": [
+    {
+      "src": "icon-dash-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-dash.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
