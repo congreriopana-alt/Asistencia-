@@ -806,7 +806,7 @@ document.getElementById('fecha').value = hoy.toISOString().split('T')[0];
 
 // ─── Cargar config guardada ───────────────────
 (function cargarConfig() {
-  const url = localStorage.getItem('elrio_sheets_url') || 'https://script.google.com/macros/s/AKfycbzwJXbWFCuUDEueWJmaH6eemEaJcOe2yZhTEKWHuI6qQlt-Lh4B7JgkBFvi1hf0VNxGJA/exec';
+  const url = localStorage.getItem('elrio_sheets_url') || 'https://script.google.com/macros/s/AKfycbws2DsRV0lQd7Q1F3korZ8y_dybdFFdI9pfHrW2PpDc4aUn-QyqRsveWYH4cPkV3jtY/exec';
   const nom = localStorage.getItem('elrio_sheets_nombre') || 'Asistencia el Rio';
   if (url) document.getElementById('sheetsUrl').value = url;
   document.getElementById('sheetsNombre').value = nom;
