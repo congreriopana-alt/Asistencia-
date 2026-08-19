@@ -1,14 +1,15 @@
-const CACHE = 'elrio-dash-v1';
+const CACHE = 'elrio-dash-v2';
 
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE).then(cache =>
-      cache.addAll([
+      Promise.allSettled([
+        '/Asistencia-/dash/',
         '/Asistencia-/dashboard_el_rio.html',
         '/Asistencia-/manifest-dash.json',
         '/Asistencia-/icon-dash.png',
         '/Asistencia-/icon-dash-192.png'
-      ]).catch(() => {})
+      ].map(url => cache.add(url).catch(() => {})))
     )
   );
   self.skipWaiting();

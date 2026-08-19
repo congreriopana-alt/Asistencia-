@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Estadística">
+<meta name="theme-color" content="#4a2c8a">
+<link rel="manifest" href="/Asistencia-/manifest-dash.json">
+<link rel="apple-touch-icon" href="/Asistencia-/icon-dash.png">
+<script>
+  // Registrar SW con scope /dash/
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/Asistencia-/sw-dash.js', {scope: '/Asistencia-/dash/'})
+      .catch(e => console.log(e));
+  }
+  // Redirigir al dashboard real
+  window.location.replace('/Asistencia-/dashboard_el_rio.html');
+</script>
+</head>
+<body></body>
+</html>
