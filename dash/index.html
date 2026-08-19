@@ -10,12 +10,10 @@
 <link rel="manifest" href="/Asistencia-/manifest-dash.json">
 <link rel="apple-touch-icon" href="/Asistencia-/icon-dash.png">
 <script>
-  // Registrar SW con scope /dash/
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/Asistencia-/sw-dash.js', {scope: '/Asistencia-/dash/'})
       .catch(e => console.log(e));
   }
-  // Redirigir al dashboard real
   window.location.replace('/Asistencia-/dashboard_el_rio.html');
 </script>
 </head>
