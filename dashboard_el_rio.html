@@ -465,6 +465,7 @@ function fCorta(s) {
 
 // ─── Render ────────────────────────────────────
 function render(data) {
+  try { localStorage.setItem('elrio_dash_cache', JSON.stringify(data)); } catch(e) {}
   data.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
   const r0 = data[0];
 

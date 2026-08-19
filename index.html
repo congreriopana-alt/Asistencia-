@@ -801,8 +801,14 @@ let presencial = 0, zoom = 0;
 const WHATSAPP_NUM = ''; // Ej: '50245678901'
 
 // ─── Fecha de hoy ─────────────────────────────
+// Fecha correcta en zona horaria Guatemala (UTC-6)
 const hoy = new Date();
-document.getElementById('fecha').value = hoy.toISOString().split('T')[0];
+const offsetGT = -6 * 60; // UTC-6
+const localGT  = new Date(hoy.getTime() + (hoy.getTimezoneOffset() + offsetGT) * 60000);
+const yyyy = localGT.getFullYear();
+const mm   = String(localGT.getMonth() + 1).padStart(2, '0');
+const dd   = String(localGT.getDate()).padStart(2, '0');
+document.getElementById('fecha').value = yyyy + '-' + mm + '-' + dd;
 
 // ─── Cargar config guardada ───────────────────
 (function cargarConfig() {
