@@ -507,13 +507,7 @@ async function cargar(sp){
 }
 
 async function obtenerDatos(){
-  if(API){
-    try{
-      const res=await fetch(API+'?action=read&hoja=Asistencia el Rio&t='+Date.now());
-      const d=await res.json();
-      if(d.ok&&d.registros&&d.registros.length)return d.registros.filter(r=>r.fecha&&r.total>0);
-    }catch(e){}
-  }
+  // CSV directo de Google Sheets (más confiable que Apps Script por CORS)
   const url='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/export?format=csv&gid='+SHEET_GID;
   const res=await fetch(url);
   const txt=await res.text();
