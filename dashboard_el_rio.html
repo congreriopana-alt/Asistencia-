@@ -435,7 +435,34 @@ const DATOS_HIST=[
   {fecha:"2026-08-01",presencial:67,zoom:30,total:97,notas:""},
   {fecha:"2026-08-06",presencial:70,zoom:32,total:102,notas:""},
   {fecha:"2026-08-08",presencial:71,zoom:31,total:102,notas:""},
-  {fecha:"2026-08-13",presencial:71,zoom:32,total:103,notas:""}
+  {fecha:"2026-08-13",presencial:71,zoom:32,total:103,notas:""},
+  {fecha:"2026-08-15",presencial:84,zoom:23,total:107,notas:""},
+  {fecha:"2026-08-20",presencial:81,zoom:32,total:113,notas:""},
+  {fecha:"2026-08-22",presencial:89,zoom:24,total:113,notas:""},
+  {fecha:"2026-08-27",presencial:71,zoom:32,total:103,notas:""},
+  {fecha:"2026-08-29",presencial:64,zoom:28,total:92,notas:""},
+  {fecha:"2026-09-03",presencial:73,zoom:28,total:101,notas:""},
+  {fecha:"2026-09-05",presencial:84,zoom:21,total:105,notas:""},
+  {fecha:"2026-09-10",presencial:79,zoom:31,total:110,notas:""},
+  {fecha:"2026-09-12",presencial:86,zoom:24,total:110,notas:""},
+  {fecha:"2026-09-17",presencial:84,zoom:37,total:121,notas:""},
+  {fecha:"2026-09-19",presencial:62,zoom:38,total:100,notas:""},
+  {fecha:"2026-09-24",presencial:40,zoom:0,total:40,notas:""},
+  {fecha:"2026-09-26",presencial:64,zoom:31,total:95,notas:""},
+  {fecha:"2026-10-01",presencial:80,zoom:25,total:105,notas:""},
+  {fecha:"2026-10-03",presencial:58,zoom:34,total:92,notas:""},
+  {fecha:"2026-10-08",presencial:66,zoom:41,total:107,notas:""},
+  {fecha:"2026-10-10",presencial:72,zoom:32,total:104,notas:""},
+  {fecha:"2026-10-15",presencial:83,zoom:25,total:108,notas:""},
+  {fecha:"2026-10-17",presencial:82,zoom:21,total:103,notas:""},
+  {fecha:"2026-10-22",presencial:92,zoom:18,total:110,notas:""},
+  {fecha:"2026-10-24",presencial:95,zoom:21,total:116,notas:""},
+  {fecha:"2026-10-29",presencial:101,zoom:28,total:129,notas:""},
+  {fecha:"2026-10-31",presencial:82,zoom:21,total:103,notas:""},
+  {fecha:"2026-11-05",presencial:84,zoom:28,total:112,notas:""},
+  {fecha:"2026-11-07",presencial:73,zoom:25,total:98,notas:""},
+  {fecha:"2026-11-12",presencial:89,zoom:22,total:111,notas:""},
+  {fecha:"2026-11-14",presencial:67,zoom:30,total:97,notas:""}
 ];
 
 let DATA_GLOBAL = [];
@@ -444,6 +471,40 @@ let DATA_GLOBAL = [];
 const DIAS=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 const MESC=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+// Normaliza CUALQUIER formato de fecha a "yyyy-MM-dd"
+// Soporta: "2026-11-14", "14/11/2026", "11/14/2026", "Sábado, 14 de noviembre de 2026",
+//          "sábado-14-11-2026", "jueves-10-9-2026"
+function normFecha(s){
+  if(!s)return null;
+  s=String(s).trim().replace(/^"|"$/g,'').trim();
+  // Ya está en formato ISO yyyy-MM-dd
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
+  // Formato con barras dd/MM/yyyy o MM/dd/yyyy
+  if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)){
+    const p=s.split('/');
+    // Si el primer número > 12 es día seguro (dd/MM/yyyy)
+    if(parseInt(p[0])>12)return p[2]+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0');
+    // Si el segundo número > 12 es mes anglosajón (MM/dd/yyyy)
+    if(parseInt(p[1])>12)return p[2]+'-'+p[0].padStart(2,'0')+'-'+p[1].padStart(2,'0');
+    // Ambiguo: asumir dd/MM/yyyy (Guatemala)
+    return p[2]+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0');
+  }
+  // Formato español largo: "Sábado, 14 de noviembre de 2026"
+  const mLargo=s.match(/(\d{1,2})\s+de\s+([a-záéíóúüñ]+)\s+de\s+(\d{4})/i);
+  if(mLargo){
+    const d=mLargo[1].padStart(2,'0');
+    const mon=MESES.findIndex(m=>m.toLowerCase()===mLargo[2].toLowerCase());
+    if(mon>=0)return mLargo[3]+'-'+(mon+1).toString().padStart(2,'0')+'-'+d;
+  }
+  // Formato "díanombre-d-m-yyyy": "sábado-14-11-2026" o "jueves-10-9-2026"
+  const mCorto=s.match(/^[a-záéíóúüñ]+-(\d{1,2})-(\d{1,2})-(\d{4})$/i);
+  if(mCorto){
+    return mCorto[3]+'-'+mCorto[2].padStart(2,'0')+'-'+mCorto[1].padStart(2,'0');
+  }
+  return null; // formato no reconocido
+}
+
 function pF(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)}
 function fF(s){const[y,m,d]=s.split('-').map(Number);const f=new Date(y,m-1,d);return DIAS[f.getDay()]+', '+d+' de '+MESES[m-1]}
 function dF(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d).getDay()}
@@ -467,13 +528,17 @@ window.onload=()=>{
   cargar(false);
   setInterval(async()=>{
     try{
-      const data=await obtenerDatos();
-      if(!data||!data.length)return;
-      const hash=data.map(r=>r.fecha+r.total).join('|');
+      const vivo=await obtenerDatos();
+      if(!vivo||!vivo.length)return;
+      const hash=vivo.map(r=>r.fecha+r.total).join('|');
       if(hash!==ultimoHash){
-        ultimoHash=hash; render(data);
+        ultimoHash=hash;
+        const data=combinarConHistorico(vivo);
+        render(data);
+        try{localStorage.setItem('elrio_dash_cache',JSON.stringify(data))}catch(e){}
         const h=new Date().toLocaleTimeString('es-GT',{hour:'2-digit',minute:'2-digit'});
         document.getElementById('ts').textContent='Nuevo dato: '+h;
+        setDot('ok','Conectado a Google Sheets');
         showToast('Nuevo registro detectado','ok');
       }
     }catch(e){}
@@ -486,9 +551,10 @@ async function cargar(sp){
   if(sp)btn.classList.add('spin');
   setDot('carg','Cargando...');
   try{
-    const data=await obtenerDatos();
-    if(!data||!data.length)throw new Error('sin datos');
-    ultimoHash=data.map(r=>r.fecha+r.total).join('|');
+    const vivo=await obtenerDatos();
+    if(!vivo||!vivo.length)throw new Error('sin datos');
+    const data=combinarConHistorico(vivo);
+    ultimoHash=vivo.map(r=>r.fecha+r.total).join('|');
     render(data);
     try{localStorage.setItem('elrio_dash_cache',JSON.stringify(data))}catch(e){}
     setDot('ok','Conectado a Google Sheets');
@@ -499,7 +565,12 @@ async function cargar(sp){
     try{
       const cached=localStorage.getItem('elrio_dash_cache');
       if(cached){render(JSON.parse(cached));setDot('carg','Sin internet — caché local');document.getElementById('ts').textContent='Mostrando datos guardados';}
-      else{setDot('err','Sin datos');document.getElementById('ts').textContent='Sin conexión';}
+      else{
+        // Sin internet: mostrar datos históricos
+        render(JSON.parse(JSON.stringify(DATOS_HIST)));
+        setDot('err','Sin conexión — datos históricos');
+        document.getElementById('ts').textContent='Sin conexión';
+      }
     }catch(ex){setDot('err','Error');}
     if(sp)showToast('Sin conexión — mostrando caché','info');
   }
@@ -511,16 +582,45 @@ async function obtenerDatos(){
   const url='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/export?format=csv&gid='+SHEET_GID;
   const res=await fetch(url);
   const txt=await res.text();
+
+  // Parsear CSV respetando campos entre comillas (ej: "Sábado, 14 de noviembre de 2026")
+  function parseCsvRow(row){
+    const cols=[];let cur='',inQ=false;
+    for(let i=0;i<row.length;i++){
+      const c=row[i];
+      if(c==='"'){inQ=!inQ;}
+      else if(c===','&&!inQ){cols.push(cur.trim());cur='';}
+      else{cur+=c;}
+    }
+    cols.push(cur.trim());
+    return cols;
+  }
+
   const rows=txt.trim().split('\n');const out=[];
   for(let i=1;i<rows.length;i++){
-    const cols=rows[i].split(',');
+    const cols=parseCsvRow(rows[i]);
     const lim=v=>String(v||'').replace(/^"|"$/g,'').trim();
-    let fecha=lim(cols[0]);if(!fecha)continue;
-    if(fecha.includes('/')){const p=fecha.split('/');fecha=p.length===3?(p[2].length===4?p[2]+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0'):p[0]+'-'+p[1].padStart(2,'0')+'-'+p[2].padStart(2,'0')):fecha;}
-    const tot=parseInt(lim(cols[3]))||0;if(!fecha||tot===0)continue;
-    out.push({fecha,presencial:parseInt(lim(cols[1]))||0,zoom:parseInt(lim(cols[2]))||0,total:tot,notas:lim(cols[4])||''});
+    const rawFecha=lim(cols[0]);if(!rawFecha)continue;
+    // Normalizar la fecha a formato ISO yyyy-MM-dd (soporta todos los formatos)
+    const fecha=normFecha(rawFecha);
+    if(!fecha)continue;
+    const tot=parseInt(lim(cols[3]))||0;if(tot===0)continue;
+    // Deduplicar: si ya existe esa fecha, conservar el registro con mayor total
+    const exist=out.findIndex(r=>r.fecha===fecha);
+    if(exist>=0){if(tot>out[exist].total)out[exist]={fecha,presencial:parseInt(lim(cols[1]))||0,zoom:parseInt(lim(cols[2]))||0,total:tot,notas:lim(cols[4])||''};}
+    else{out.push({fecha,presencial:parseInt(lim(cols[1]))||0,zoom:parseInt(lim(cols[2]))||0,total:tot,notas:lim(cols[4])||''});}
   }
   return out;
+}
+
+// ── Mezclar datos históricos con datos en vivo (en vivo tiene prioridad) ────
+function combinarConHistorico(vivo){
+  const mapa={};
+  // Primero cargamos el histórico
+  DATOS_HIST.forEach(r=>{mapa[r.fecha]={...r};});
+  // Los datos en vivo sobreescriben (son más recientes/precisos)
+  vivo.forEach(r=>{mapa[r.fecha]={...r};});
+  return Object.values(mapa);
 }
 
 // ── RENDER PRINCIPAL ────────────────────────────
